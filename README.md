@@ -30,10 +30,10 @@ await Spypoint.login()
 
 <a name="Spypoint.filters"></a>
 
-### Spypoint.filters() ⇒ <code>Promise.&lt;Array&gt;</code>
+### Spypoint.filters() ⇒ <code>Promise.&lt;Object&gt;</code>
 **Kind**: Spypoint method
 
-**Returns**: <code>Promise.&lt;Array&gt;</code> - List of all available filter tags
+**Returns**: <code>Promise.&lt;Object&gt;</code> - Object containing a property `.species` w/ list of all available filter tags
 
 <a name="Spypoint.mostRecentPhotosByCamera"></a>
 
@@ -56,9 +56,9 @@ await Spypoint.login()
 | [options.tags] | <code>Array</code> \| <code>string</code> | Array of filter tag options or a single tag as a string |
 | [options.limit] | <code>Number</code> | Maximum number of results to return |
 
-<a name="Spypoint.allPhotosByFilter"></a>
+<a name="Spypoint.queryAllPhotos"></a>
 
-### Spypoint.allPhotosByFilter([options]) ⇒ <code>Promise.&lt;Array&gt;</code>
+### Spypoint.queryAllPhotos([options]) ⇒ <code>Promise.&lt;Array&gt;</code>
 **Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;Array&gt;</code> - List of photo by individual camera 
