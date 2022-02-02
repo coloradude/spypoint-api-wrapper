@@ -21,14 +21,14 @@ class SpypointClient {
     }
   }
 
-  async get(apiEndpoint) {
+  async _get(apiEndpoint) {
     const data = await fetch(apiEndpoint, {
       headers: this._headers
     })
     return data.json()
   }
 
-  async post(cameraId = isRequired(), options = { tags: [], limit: 100 }) {
+  async _post(cameraId = isRequired(), { tags = [], limit = 100 }) {
 
     const data = await fetch(PHOTOS, {
       method: 'POST',
@@ -43,6 +43,32 @@ class SpypointClient {
       })
     })
     return data.json()
+  }
+
+  async _tagParamCheck(tags){
+    if (typeof tags === 'string'){
+      tags = [tags]
+    }
+
+    if (!Array.isArray(tags)){
+      return console.error('Tag parameter needs to either be a string or an array of strings')
+    }
+
+    tags = tags.map(tag => tag.toLowerCase())
+
+    const filters = await this.filters()
+    const filteredNames = filters.species.map(({nameId}) => nameId)
+
+
+    const cleanTags = tags.filter( tag => {
+      if (!filteredNames.includes(tag)){
+        console.error(`The tag "${tag}" is not an available option. Please check your spelling or use Spypoint.filters() to see all available tags.`)
+        return false
+      }
+      return tag
+    })
+
+    return cleanTags
   }
 
   /**
@@ -75,8 +101,8 @@ class SpypointClient {
    */
 
   async cameras() {
-    const cameras =  await this.get(CAMERAS)
-    return cameras.json()
+    const cameras =  await this._get(CAMERAS)
+    return cameras
   }
 
   /**
@@ -84,8 +110,8 @@ class SpypointClient {
    */
 
   async filters() {
-    const filters = await this.get(FILTERS)
-    return filters.json()
+    const filters = await this._get(FILTERS)
+    return filters
   }
 
     /**
@@ -95,9 +121,12 @@ class SpypointClient {
  * @return {Object[]} An array of photo objects
  */
 
-  async photosByCamera(cameraId = isRequired(), options = { limit: 100, tags: [] }){
-    const photos = await this.post(cameraId, {limit, tags})
-    return photos.json()
+  async photosByCamera(cameraId = isRequired(), { limit = 100, tags = [] }){
+
+    tags = await this._tagParamCheck(tags)
+
+    const photos = await this._post(cameraId, {limit, tags})
+    return photos
   }
 
   /**
@@ -121,34 +150,14 @@ class SpypointClient {
    * @return {Object[]} - All photos filtered by the given tags and limit
    */
 
-  async queryAllPhotos(options = { limit: 100, tags: []}) {
+  async queryAllPhotos({ limit = 100, tags = []}) {
 
-    if (typeof options.tags === 'string'){
-      options.tags = [options.tags]
-    }
-
-    if (!Array.isArray(options.tags)){
-      return console.error('Tag parameter needs to either be a string or an array of strings')
-    }
-
-    options.tags = options.tags.map(tag => tag.toLowerCase())
-
-    const filters = await this.filters()
-    const filteredNames = filters.species.map(({nameId}) => nameId)
-
-
-    const cleanTags = options.tags.filter( tag => {
-      if (!filteredNames.includes(tag)){
-        console.error(`The tag "${tag}" is not an available option. Please check your spelling.`)
-        return false
-      }
-      return tag
-    })
+   tags = await this._tagParamCheck(tags)
 
     const cameras = await this.cameras()
 
     const photoReq = cameras.map(({ id }) => {
-      return this.photosByCamera(id, {limit: options.limit, tags: cleanTags})
+      return this.photosByCamera(id, {limit, tags})
     })
     const photoRes = await Promise.all(photoReq)
 
