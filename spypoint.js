@@ -1,10 +1,10 @@
 import fetch from 'node-fetch'
 
 const API_BASE = 'https://restapi.spypoint.com/api/v3'
-const LOGIN_ENDPOINT = `${API_BASE}/user/login`
-const CAMERA_ENDPOINT = `${API_BASE}/camera/all`
-const PHOTO_ENDPOINT = `${API_BASE}/photo/all`
-const FILTERS_ENDPOINT = `${API_BASE}/photo/filters`
+const LOGIN = `${API_BASE}/user/login`
+const CAMERAS = `${API_BASE}/camera/all`
+const PHOTOS = `${API_BASE}/photo/all`
+const FILTERS = `${API_BASE}/photo/filters`
 
 const isRequired = () => { throw new Error('param is required'); };
 
@@ -16,7 +16,33 @@ class SpypointClient {
   ){
     this._username = username
     this._password = password
-    this._headers;
+    this._headers = {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  async get(apiEndpoint) {
+    const data = await fetch(apiEndpoint, {
+      headers = this._headers
+    })
+    return data.json()
+  }
+
+  async post(cameraId, options = { tags: [], limit: 100 }) {
+
+    const data = await fetch(PHOTOS = isRequired(), {
+      method: 'POST',
+      headers: this._headers,
+      body: JSON.stringify({
+        cameraId: [cameraId],
+        dateEnd: "2100-01-01T00:00:00.000Z",
+        favorite: false,
+        hd: false,
+        tag: tags,
+        limit
+      })
+    })
+    return data.json()
   }
 
   /**
@@ -25,15 +51,9 @@ class SpypointClient {
 
   async login() {
 
-    const credentialRes = await fetch(LOGIN_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: this._username, 
-        password: this._password
-      })
+    const credentialRes = await fetch(LOGIN, {
+      username: this._username, 
+      password: this._password
     })
 
     if (credentialRes.status !== 200){
@@ -42,12 +62,8 @@ class SpypointClient {
 
     const { token } = await credentialRes.json()
 
-    this._headers = {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
+    return this._headers.authorization = `Bearer ${token}`
 
-   return this._headers.authorization
   }
 
   /**
@@ -55,10 +71,7 @@ class SpypointClient {
    */
 
   async cameras() {
-    const cameras =  await fetch(
-      CAMERA_ENDPOINT, { 
-      headers: this._headers 
-    })
+    const cameras =  await this.get(CAMERAS)
     return cameras.json()
   }
 
@@ -67,10 +80,7 @@ class SpypointClient {
    */
 
   async filters() {
-    const filters = await fetch(
-      FILTERS_ENDPOINT, {
-      headers: this._headers
-    })
+    const filters = await this.get(FILTERS)
     return filters.json()
   }
 
@@ -81,23 +91,8 @@ class SpypointClient {
  * @return {Object[]} An array of photo objects
  */
 
-    async photosByCamera(cameraId = isRequired(), options = {limit: 100, tags: []}){
-
-    const body = JSON.stringify({
-      camera: [cameraId],
-      dateEnd: "2100-01-01T00:00:00.000Z",
-      favorite: false,
-      hd: false,
-      tag: options.tags,
-      limit: options.limit
-    })
-
-    const photos = await fetch(PHOTO_ENDPOINT, {
-      method: 'POST',
-      headers: this._headers,
-      body
-    })
-
+  async photosByCamera(cameraId = isRequired(), options = { limit: 100, tags: [] }){
+    const photos = await this.post(cameraId, {limit, tags})
     return photos.json()
   }
 
@@ -122,7 +117,7 @@ class SpypointClient {
    * @return {Object[]} - All photos filtered by the given tags and limit
    */
 
-  async allPhotosByFilter(options = { limit: 100, tags: []}) {
+  async queryAllPhotos(options = { limit: 100, tags: []}) {
 
     if (typeof options.tags === 'string'){
       options.tags = [options.tags]
