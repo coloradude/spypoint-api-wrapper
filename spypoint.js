@@ -107,7 +107,7 @@ class SpypointClient {
   async mostRecentPhotosByCamera() {
     
     const cameras = await this.cameras()
-    const photoReq = cameras.map(({ id }) => this.photosByCamera(id, 1))
+    const photoReq = cameras.map(({ id }) => this.photosByCamera(id, { limit: 1 }))
     const photoDataRes = await Promise.all(photoReq)
     return photoDataRes
       .filter(({ photos }) => !!photos.length)
