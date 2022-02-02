@@ -1,5 +1,5 @@
 # spypoint-api-wrapper
-A Javascript wrapper for the Spypoint game camera API
+A simple Node.js wrapper for the Spypoint game camera API
 
 ## Getting Started
 
@@ -14,26 +14,57 @@ await Spypoint.login()
 
 ## API
 
-### Spypoint.login()
+<a name="Spypoint.login()"></a>
 
-Must be called after client initialization and before any other methods to retrieve authentication information
+## Spypoint.login() ⇒ <code>Promise.&lt;string&gt;</code>
+**Kind**: Spypoint method
 
-### Spypoint.cameras()
+**Returns**: <code>Promise.&lt;string&gt;</code> - Bearer token used for authorization (this is automatically set and added to all requests)
 
-Retrieves a list of all available cameras
+<a name="Spypoint.cameras()"></a>
 
-### Spypoint.filters()
+## Spypoint.cameras() ⇒ <code>Promise.&lt;Array&gt;</code>
+**Kind**: Spypoint method
 
-Retrieves a list of all available filters
+**Returns**: <code>Promise.&lt;Array&gt;</code> - List of all available `cameraId`s
 
-### Spypoint.photosByCamera(cameraId, limit = 100, filters = [])
+<a name="Spypoint.filters"></a>
 
-Retrieves all photos from spcecified camera
+## Spypoint.filters() ⇒ <code>Promise.&lt;Array&gt;</code>
+**Kind**: Spypoint method
 
-### Spypoint.mostRecentPhotosByCamera(cameraID)
+**Returns**: <code>Promise.&lt;Array&gt;</code> - List of all available filter tags
 
-Retrieves the most recent image from each camera
+<a name="Spypoint.mostRecentPhotosByCamera"></a>
 
-### Spypoint.allPhotosByfilter(cameraId, tags = [], limit = 100)
+## Spypoint.mostRecentPhotosByCamera() ⇒ <code>Promise.&lt;Array&gt;</code>
+**Kind**: Spypoint method
 
-Retrieves filtered list of photos from each camera. Reference avaliable filters w/ `Spypoint.filters()`
+**Returns**: <code>Promise.&lt;Array&gt;</code> - List of most recent photo taken from each camera
+
+<a name="Spypoint.photosByCamera"></a>
+
+## Spypoint.photosByCamera(cameraId, [options]) ⇒ <code>Promise.&lt;Array&gt;</code>
+**Kind**: Spypoint method
+
+**Returns**: <code>Promise.&lt;Array&gt;</code> - List of photos from an individual camera 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cameraId | <code>string</code> | Unique identifier for the camera to request photos from
+| [options] | <code>Object</code> | Options object |
+| [options.tag] | <code>Array</code> \| <code>string</code> | Array of filter tag options or a single tag as a string |
+| [options.limit] | <code>Number</code> | Maximum number of results to return |
+
+<a name="Spypoint.allPhotosByFilter"></a>
+
+## Spypoint.allPhotosByFilter([options]) ⇒ <code>Promise.&lt;Array&gt;</code>
+**Kind**: Spypoint method
+
+**Returns**: <code>Promise.&lt;Array&gt;</code> - List of photo by individual camera 
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [options] | <code>Object</code> | Options object |
+| [options.tag] | <code>Array</code> \| <code>string</code> | Array of filter tag options or a single tag as a string |
+| [options.limit] | <code>Number</code> | Maximum number of results to return |

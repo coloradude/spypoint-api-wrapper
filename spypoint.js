@@ -8,17 +8,7 @@ const FILTERS_ENDPOINT = `${API_BASE}/photo/filters`
 
 const isRequired = () => { throw new Error('param is required'); };
 
-/**
- * @param  {string} host - Host name
- * @param  {string} path - Asset path
- * @returns {string} Url of asset
- */
-
-const urlFromComponenets = (host, path) => {
-  return `http://${host}/${path}`
-}
-
-class SpyPointClient {
+class SpypointClient {
 
   constructor(
     username = isRequired(), 
@@ -57,7 +47,7 @@ class SpyPointClient {
       authorization: `Bearer ${token}`
     }
 
-   return this._headers
+   return this._headers.authorization
   }
 
   /**
@@ -90,15 +80,15 @@ class SpyPointClient {
  * @return {Object[]} An array of photo objects
  */
 
-    async photosByCamera(cameraId = isRequired(), limit = 100, tags = []){
+    async photosByCamera(cameraId = isRequired(), options = {limit: 100, tags: []}){
 
     const body = JSON.stringify({
       camera: [cameraId],
       dateEnd: "2100-01-01T00:00:00.000Z",
       favorite: false,
       hd: false,
-      tag: tags,
-      limit,
+      tag: options.tags,
+      limit: options.limit,
     })
 
     const photos = await fetch(PHOTO_ENDPOINT, {
@@ -129,23 +119,23 @@ class SpyPointClient {
    * @return {Object[]} - All photos filtered by the given tags and limit
    */
 
-  async allPhotosByFilter(tags = [], limit = 100) {
+  async allPhotosByFilter(options = { limit: 100, tags: []}) {
 
-    if (typeof tags === 'string'){
-      tags = [tags]
+    if (typeof options.tags === 'string'){
+      options.tags = [options.tags]
     }
 
-    if (!Array.isArray(tags)){
+    if (!Array.isArray(options.tags)){
       return console.error('Tag parameter needs to either be a string or an array of strings')
     }
 
-    tags = tags.map(tag => tag.toLowerCase())
+    options.tags = options.tags.map(tag => tag.toLowerCase())
 
     const filters = await this.filters()
     const filteredNames = filters.species.map(({nameId}) => nameId)
 
 
-    const cleanTags = tags.filter( tag => {
+    const cleanTags = options.tags.filter( tag => {
       if (!filteredNames.includes(tag)){
         console.error(`The tag "${tag}" is not an available option. Please check your spelling.`)
         return false
@@ -156,7 +146,7 @@ class SpyPointClient {
     const cameras = await this.cameras()
 
     const photoReq = cameras.map(({ id }) => {
-      return this.photosByCamera(id, limit, cleanTags)
+      return this.photosByCamera(id, {limit: options.limit, tags: cleanTags})
     })
     const photoRes = await Promise.all(photoReq)
 
@@ -166,4 +156,4 @@ class SpyPointClient {
   }
 }
 
-export default SpyPointClient
+export default SpypointClient

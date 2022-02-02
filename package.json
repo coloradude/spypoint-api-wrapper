@@ -1,13 +1,18 @@
 {
   "name": "spypoint-api-wrapper",
   "version": "1.0.0",
-  "description": "Wrapper for the Spypoint game camera API",
+  "description": "Node.js wrapper for the Spypoint game camera API",
   "main": "spypoint.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "spypoint"
+    "spypoint",
+    "api",
+    "wrapper",
+    "clent",
+    "game",
+    "camera"
   ],
   "author": "",
   "license": "MIT",
