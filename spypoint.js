@@ -56,9 +56,9 @@ class SpypointClient {
 
   async cameras() {
     const cameras =  await fetch(
-      CAMERA_ENDPOINT, 
-      { headers: this._headers }
-    )
+      CAMERA_ENDPOINT, { 
+      headers: this._headers 
+    })
     return cameras.json()
   }
 
@@ -67,7 +67,8 @@ class SpypointClient {
    */
 
   async filters() {
-    const filters = await fetch(FILTERS_ENDPOINT, {
+    const filters = await fetch(
+      FILTERS_ENDPOINT, {
       headers: this._headers
     })
     return filters.json()
@@ -88,7 +89,7 @@ class SpypointClient {
       favorite: false,
       hd: false,
       tag: options.tags,
-      limit: options.limit,
+      limit: options.limit
     })
 
     const photos = await fetch(PHOTO_ENDPOINT, {
