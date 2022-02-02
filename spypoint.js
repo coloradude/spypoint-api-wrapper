@@ -10,12 +10,7 @@ const isRequired = () => { throw new Error('param is required'); };
 
 class SpypointClient {
 
-  constructor(
-    username = isRequired(), 
-    password = isRequired()
-  ){
-    this._username = username
-    this._password = password
+  constructor() {
     this._headers = {
       'Content-Type': 'application/json'
     }
@@ -75,14 +70,14 @@ class SpypointClient {
    * @return {Object} - Auth token and uuid credentials
    */
 
-  async login() {
+  async login(username, password) {
 
     const credentialRes = await fetch(LOGIN, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        username: this._username, 
-        password: this._password
+        username,
+        password
       })
     })
 
@@ -152,7 +147,7 @@ class SpypointClient {
 
   async queryAllPhotos({ limit = 100, tags = []}) {
 
-   tags = await this._tagParamCheck(tags)
+    tags = await this._tagParamCheck(tags)
 
     const cameras = await this.cameras()
 
