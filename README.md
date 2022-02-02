@@ -8,8 +8,8 @@ A simple Node.js wrapper for the Spypoint game camera API
 ```js
 import SpypointClient from 'spypoint-api-wrapper'
 
-const Spypoint = new SpypointClient('YOUR_EMAIL_OR_USERNAME', 'YOUR_PASSWORD')
-await Spypoint.login()
+const Spypoint = new SpypointClient()
+await Spypoint.login('YOUR_EMAIL_OR_USERNAME', 'YOUR_PASSWORD')
 ```
 
 ## API
@@ -17,35 +17,30 @@ await Spypoint.login()
 <a name="Spypoint.login()"></a>
 
 ### Spypoint.login() ⇒ <code>Promise.&lt;string&gt;</code>
-**Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;string&gt;</code> - Bearer token used for authorization (this is automatically set and added to all requests)
 
 <a name="Spypoint.cameras()"></a>
 
 ### Spypoint.cameras() ⇒ <code>Promise.&lt;Array&gt;</code>
-**Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;Array&gt;</code> - List of all available `cameraId`s
 
 <a name="Spypoint.filters"></a>
 
 ### Spypoint.filters() ⇒ <code>Promise.&lt;Object&gt;</code>
-**Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;Object&gt;</code> - Object containing a property `.species` w/ list of all available filter tags
 
 <a name="Spypoint.mostRecentPhotosByCamera"></a>
 
 ### Spypoint.mostRecentPhotosByCamera() ⇒ <code>Promise.&lt;Array&gt;</code>
-**Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;Array&gt;</code> - List of most recent photo taken from each camera
 
 <a name="Spypoint.photosByCamera"></a>
 
 ### Spypoint.photosByCamera(cameraId, [options]) ⇒ <code>Promise.&lt;Array&gt;</code>
-**Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;Array&gt;</code> - List of photos from an individual camera 
 
@@ -59,7 +54,6 @@ await Spypoint.login()
 <a name="Spypoint.queryAllPhotos"></a>
 
 ### Spypoint.queryAllPhotos([options]) ⇒ <code>Promise.&lt;Array&gt;</code>
-**Kind**: Spypoint method
 
 **Returns**: <code>Promise.&lt;Array&gt;</code> - List of photo by individual camera 
 
