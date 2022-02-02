@@ -23,7 +23,7 @@ class SpypointClient {
 
   async get(apiEndpoint) {
     const data = await fetch(apiEndpoint, {
-      headers = this._headers
+      headers: this._headers
     })
     return data.json()
   }
@@ -52,8 +52,12 @@ class SpypointClient {
   async login() {
 
     const credentialRes = await fetch(LOGIN, {
-      username: this._username, 
-      password: this._password
+      method: 'POST',
+      headers: this._headers,
+      body: JSON.stringify({
+        username: this._username, 
+        password: this._password
+      })
     })
 
     if (credentialRes.status !== 200){
