@@ -14,7 +14,7 @@
     "game",
     "camera"
   ],
-  "author": "",
+  "author": "Stephen Florian",
   "license": "MIT",
   "dependencies": {
     "node-fetch": "^3.2.0"
