@@ -109,7 +109,9 @@ class SpypointClient {
     const cameras = await this.cameras()
     const photoReq = cameras.map(({ id }) => this.photosByCamera(id, 1))
     const photoDataRes = await Promise.all(photoReq)
-    return photoDataRes.map(({ photos }) => photos[0])
+    return photoDataRes
+      .filter(({ photos }) => !!photos.length)
+      .map(({ photos }) => photos[0])
 
   }
 
