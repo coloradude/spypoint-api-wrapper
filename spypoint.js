@@ -10,10 +10,11 @@ const isRequired = () => { throw new Error('param is required'); };
 
 class SpypointClient {
 
-  constructor() {
+  constructor(authorization) {
     this._headers = {
       'Content-Type': 'application/json'
     }
+    this._headers.authorization = authorization
   }
 
   async _get(apiEndpoint) {
@@ -24,13 +25,12 @@ class SpypointClient {
   }
 
   async _post(cameraId = isRequired(), { tags = [], limit = 100 }) {
-
     const data = await fetch(PHOTOS, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
         cameraId: [cameraId],
-        dateEnd: "≈",
+        dateEnd: "2100-01-01T00:00:00.000Z",
         favorite: false,
         hd: false,
         tag: tags,
@@ -54,10 +54,11 @@ class SpypointClient {
     const filters = await this.filters()
     const filteredNames = filters.species.map(({nameId}) => nameId)
 
-
     const cleanTags = tags.filter( tag => {
       if (!filteredNames.includes(tag)){
-        console.error(`The tag "${tag}" is not an available option. Please check your spelling or use Spypoint.filters() to see all available tags.`)
+        console.error(`The tag "${tag}" is not an available option. 
+          Please check your spelling or use Spypoint.filters() to 
+          see all available tags.`)
         return false
       }
       return tag
@@ -71,7 +72,6 @@ class SpypointClient {
    */
 
   async login(username, password) {
-
     const credentialRes = await fetch(LOGIN, {
       method: 'POST',
       headers: this._headers,
@@ -128,14 +128,17 @@ class SpypointClient {
    * @return {Object[]} - The most recent photo from each camera
    */
 
+  //Returning empty photo arrays???,
+
   async mostRecentPhotosByCamera() {
     
     const cameras = await this.cameras()
     const photoReq = cameras.map(({ id }) => this.photosByCamera(id, { limit: 1 }))
     const photoDataRes = await Promise.all(photoReq)
+
     return photoDataRes
-      .filter(({ photos }) => !!photos.length)
-      .map(({ photos }) => photos[0])
+      .filter(({ cameraIds }) => !!cameraIds.length)
+      .map(photoList =>  photoList.photos[0])
 
   }
 
