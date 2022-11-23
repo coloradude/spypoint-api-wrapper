@@ -159,10 +159,6 @@ class SpypointClient {
    * @return {Object[]} - All photos filtered by the given tags and limit
    */
 
-  /**
-   * Note: The Spypoint API limits results to most recent 25 photos
-   */
-
   async queryAllPhotos({ limit = 100, tags = [] } = { limit, tags }) {
     tags = await this._tagParamCheck(tags);
 
