@@ -1,28 +1,28 @@
-import fetch from "node-fetch";
+import fetch from "node-fetch"
 
-const API_BASE = "https://restapi.spypoint.com/api/v3";
-const LOGIN = `${API_BASE}/user/login`;
-const CAMERAS = `${API_BASE}/camera/all`;
-const PHOTOS = `${API_BASE}/photo/all`;
-const FILTERS = `${API_BASE}/photo/filters`;
+const API_BASE = "https://restapi.spypoint.com/api/v3"
+const LOGIN = `${API_BASE}/user/login`
+const CAMERAS = `${API_BASE}/camera/all`
+const PHOTOS = `${API_BASE}/photo/all`
+const FILTERS = `${API_BASE}/photo/filters`
 
 const isRequired = () => {
-  throw new Error("param is required");
-};
+  throw new Error("param is required")
+}
 
 class SpypointClient {
   constructor(authorization) {
     this._headers = {
       "Content-Type": "application/json",
-    };
-    this._headers.authorization = authorization;
+    }
+    this._headers.authorization = authorization
   }
 
   async _get(apiEndpoint) {
     const data = await fetch(apiEndpoint, {
       headers: this._headers,
-    });
-    return data.json();
+    })
+    return data.json()
   }
 
   async _post(cameraId = isRequired(), { limit = 100, tags = [] } = {}) {
@@ -37,8 +37,8 @@ class SpypointClient {
         tag: tags,
         limit,
       }),
-    });
-    return data.json();
+    })
+    return data.json()
   }
 
   /**
@@ -49,31 +49,31 @@ class SpypointClient {
 
   async _tagParamCheck(tags) {
     if (typeof tags === "string") {
-      tags = [tags];
+      tags = [tags]
     }
 
     if (!Array.isArray(tags)) {
       return console.error(
         "Tag parameter needs to either be a string or an array of strings"
-      );
+      )
     }
 
-    tags = tags.map((tag) => tag.toLowerCase());
+    tags = tags.map((tag) => tag.toLowerCase())
 
-    const filters = await this.filters();
-    const filteredNames = filters.species.map(({ nameId }) => nameId);
+    const filters = await this.filters()
+    const filteredNames = filters.species.map(({ nameId }) => nameId)
 
     const cleanTags = tags.filter((tag) => {
       if (!filteredNames.includes(tag)) {
         console.error(`The tag "${tag}" is not an available option. 
           Please check your spelling or use Spypoint.filters() to 
-          see all available tags.`);
-        return false;
+          see all available tags.`)
+        return false
       }
-      return tag;
-    });
+      return tag
+    })
 
-    return cleanTags;
+    return cleanTags
   }
 
   /**
@@ -88,17 +88,17 @@ class SpypointClient {
         username,
         password,
       }),
-    });
+    })
 
     if (credentialRes.status !== 200) {
       throw new Error(
         `HTTP Error: Status ${credentialRes.status} | ${credentialRes.statusText}`
-      );
+      )
     }
 
-    const { token } = await credentialRes.json();
+    const { token } = await credentialRes.json()
 
-    return (this._headers.authorization = `Bearer ${token}`);
+    return (this._headers.authorization = `Bearer ${token}`)
   }
 
   /**
@@ -106,8 +106,8 @@ class SpypointClient {
    */
 
   async cameras() {
-    const cameras = await this._get(CAMERAS);
-    return cameras;
+    const cameras = await this._get(CAMERAS)
+    return cameras
   }
 
   /**
@@ -115,8 +115,8 @@ class SpypointClient {
    */
 
   async filters() {
-    const filters = await this._get(FILTERS);
-    return filters;
+    const filters = await this._get(FILTERS)
+    return filters
   }
 
   /**
@@ -130,10 +130,10 @@ class SpypointClient {
     cameraId = isRequired(),
     { limit = 100, tags = [] } = {}
   ) {
-    tags = await this._tagParamCheck(tags);
+    tags = await this._tagParamCheck(tags)
 
-    const photos = await this._post(cameraId, { limit, tags });
-    return photos;
+    const photos = await this._post(cameraId, { limit, tags })
+    return photos
   }
 
   /**
@@ -142,15 +142,17 @@ class SpypointClient {
    */
 
   async mostRecentPhotosByCamera(tags = []) {
-    const cameras = await this.cameras();
+
+    const cameras = await this.cameras()
+
     const photoReq = cameras.map(({ id }) =>
       this.photosByCamera(id, { limit: 1, tags })
-    );
-    const photoDataRes = await Promise.all(photoReq);
+    )
+    const photoDataRes = await Promise.all(photoReq)
 
     return photoDataRes
       .filter(({ cameraIds }) => !!cameraIds.length)
-      .map((photoList) => photoList.photos[0]);
+      .map((photoList) => photoList.photos[0])
   }
 
   /**
@@ -160,19 +162,19 @@ class SpypointClient {
    */
 
   async queryAllPhotos({ limit = 100, tags = [] } = { limit, tags }) {
-    tags = await this._tagParamCheck(tags);
+    tags = await this._tagParamCheck(tags)
 
-    const cameras = await this.cameras();
+    const cameras = await this.cameras()
 
     const photoReq = cameras.map(({ id }) => {
-      return this.photosByCamera(id, { limit, tags });
-    });
-    const photoRes = await Promise.all(photoReq);
+      return this.photosByCamera(id, { limit, tags })
+    })
+    const photoRes = await Promise.all(photoReq)
 
-    const filteredPhotos = photoRes.filter((photo) => !!photo.photos.length);
+    const filteredPhotos = photoRes.filter((photo) => !!photo.photos.length)
 
-    return filteredPhotos;
+    return filteredPhotos
   }
 }
 
-export default SpypointClient;
+export default SpypointClient
