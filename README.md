@@ -96,3 +96,5 @@ router.get('/', SpypointInit, (req, res) => {
 | [options] | <code>Object</code> | Options object |
 | [options.tags] | <code>Array</code> \| <code>string</code> | Array of filter tag options or a single tag as a string |
 | [options.limit] | <code>Number</code> | Maximum number of results to return |
+
+

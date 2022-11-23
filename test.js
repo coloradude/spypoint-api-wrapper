@@ -1,10 +1,14 @@
+/**
+ * Requires a .env file with valid credentials for USERNAME and PASSWORD
+ */
+
 import 'dotenv/config'
 import SpypointClient from "./spypoint"
 
-const testLogin = () => {
+async function testLogin() = {
   const Spypoint = new SpypointClient()
-  await Spypoint.login(process.env.EMAIL, process.env.PASSWORD)
-  return Spypoint
+  const SpypointService = await Spypoint.login(process.env.EMAIL, process.env.PASSWORD)
+  return SpypointService
 }
 
 test('Retrieves an auth token', async () => {

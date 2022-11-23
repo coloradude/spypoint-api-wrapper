@@ -24,12 +24,15 @@ class SpypointClient {
     return data.json()
   }
 
-  async _post(cameraId = isRequired(), { tags = [], limit = 100 }) {
+  async _post(cameraId = isRequired(), options = { limit: 100, tags: []}) {
+
+    const { limit, tags } = options
+
     const data = await fetch(PHOTOS, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        cameraId: [cameraId],
+        camera: [cameraId],
         dateEnd: "2100-01-01T00:00:00.000Z",
         favorite: false,
         hd: false,
@@ -40,7 +43,14 @@ class SpypointClient {
     return data.json()
   }
 
+  /**
+   * Note: This is an async function, it retrieves a list of available tags from Spytpoint and
+   * compares the provided tags to ensure they match. Spypoint occasionally changes these hence why
+   * this is necessary otherwise it will return an error if you add a no longer supported tag. 
+   */ 
+
   async _tagParamCheck(tags){
+
     if (typeof tags === 'string'){
       tags = [tags]
     }
@@ -116,24 +126,24 @@ class SpypointClient {
  * @return {Object[]} An array of photo objects
  */
 
-  async photosByCamera(cameraId = isRequired(), { limit = 100, tags = [] }){
+  async photosByCamera(cameraId = isRequired(), { limit =  100, tags =  []} = {}){
 
     tags = await this._tagParamCheck(tags)
 
-    const photos = await this._post(cameraId, {limit, tags})
+    const photos = await this._post(cameraId, { limit, tags })
     return photos
   }
 
   /**
+   * @param  {string[]|string} [tags=[]] - Query to limit results by photo subject i.e. 'deer', 'bears'
    * @return {Object[]} - The most recent photo from each camera
    */
 
-  //Returning empty photo arrays???,
 
-  async mostRecentPhotosByCamera() {
+  async mostRecentPhotosByCamera(tags = []) {
     
     const cameras = await this.cameras()
-    const photoReq = cameras.map(({ id }) => this.photosByCamera(id, { limit: 1 }))
+    const photoReq = cameras.map(({ id }) => this.photosByCamera(id, { limit: 1, tags }))
     const photoDataRes = await Promise.all(photoReq)
 
     return photoDataRes
@@ -148,7 +158,11 @@ class SpypointClient {
    * @return {Object[]} - All photos filtered by the given tags and limit
    */
 
-  async queryAllPhotos({ limit = 100, tags = []}) {
+  /**
+   * Note: The Spypoint API limits results to most recent 25 photos
+   */
+
+  async queryAllPhotos({ limit = 100, tags = []} = { limit, tags }) {
 
     tags = await this._tagParamCheck(tags)
 
