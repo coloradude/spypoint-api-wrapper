@@ -24,7 +24,7 @@ class SpypointClient {
     return data.json()
   }
 
-  async _post(cameraId = isRequired(), options = { limit: 100, tags: []}) {
+  async _post(cameraId = isRequired(), { limit: 100, tags: []} = {}) {
 
     const { limit, tags } = options
 
