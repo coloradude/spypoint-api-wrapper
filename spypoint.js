@@ -42,7 +42,7 @@ class SpypointClient {
   }
 
   /**
-   * Note: This is an async function, it retrieves a list of available tags from Spytpoint and
+   * Note: This is an async function, it retrieves a list of available tags from Spypoint and
    * compares the provided tags to ensure they match. Spypoint occasionally changes these hence why
    * this is necessary otherwise it will return an error if you add a no longer supported tag.
    */
@@ -118,6 +118,17 @@ class SpypointClient {
     const filters = await this._get(FILTERS)
     return filters
   }
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+// https://stackoverflow.com/questions/10683430/jsdoc-how-do-i-document-the-options-object-literal-for-a-parent-class
+
+
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++
 
   /**
    * @param  {string} cameraId - Unique identifier of the camera to request photos from
