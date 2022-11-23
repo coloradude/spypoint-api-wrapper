@@ -1,8 +1,8 @@
 {
   "name": "spypoint-api-wrapper",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Node.js wrapper for the Spypoint game camera API",
-  "homepage": "https://github.com/coloradude/spypoint-api-wrapper"
+  "homepage": "https://github.com/coloradude/spypoint-api-wrapper",
   "main": "spypoint.js",
   "scripts": {
     "test": "jest"
