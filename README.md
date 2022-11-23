@@ -17,7 +17,7 @@ await Spypoint.login('YOUR_EMAIL_OR_USERNAME', 'YOUR_PASSWORD')
 ```js
 import SpypointClient from './spypoint.js'
 
-// Send user crederntials to login route and set auth token on the cookie
+// Send user credentials to login route and set auth token on the cookie
 
 router.post('/login', async (req, res) => {
 
@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
 
 })
 
-// Middleware to pass auth token for requestsg
+// Middleware to pass auth token for requests
 
 const SpypointInit = (req, res, next) => {
   if (!req.cookies.authorization) throw Error('You need to login with valid credentials first!')
