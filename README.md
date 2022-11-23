@@ -17,12 +17,6 @@ await Spypoint.login('YOUR_EMAIL_OR_USERNAME', 'YOUR_PASSWORD')
 ```js
 import SpypointClient from './spypoint.js'
 
-const SpypointInit = (req, res, next) => {
-  if (!req.cookies.authorization) throw Error('You need to login with valid credentials first!')
-  req.Spypoint = new SpypointClient(req.cookies.authorization)
-  next()
-}
-
 // Send user crederntials to login route and set auth token on the cookie
 
 router.post('/login', async (req, res) => {
@@ -37,15 +31,21 @@ router.post('/login', async (req, res) => {
 
 })
 
+// Middleware to pass auth token for requestsg
+
+const SpypointInit = (req, res, next) => {
+  if (!req.cookies.authorization) throw Error('You need to login with valid credentials first!')
+  req.Spypoint = new SpypointClient(req.cookies.authorization)
+  next()
+}
+
+
 router.get('/', SpypointInit, (req, res) => {
   const cameras = await req.Spypoint.cameras()
   res.send(cameras)
 })
 
 ```
-
-
-
 ## API
 
 <a name="Spypoint.login()"></a>
