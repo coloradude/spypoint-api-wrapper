@@ -24,6 +24,6 @@
   "type": "module",
   "devDependencies": {
     "dotenv": "^15.0.0",
-    "jest": "^27.4.7",
+    "jest": "^27.4.7"
   }
 }
