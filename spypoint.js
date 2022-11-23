@@ -24,9 +24,7 @@ class SpypointClient {
     return data.json()
   }
 
-  async _post(cameraId = isRequired(), { limit: 100, tags: []} = {}) {
-
-    const { limit, tags } = options
+  async _post(cameraId = isRequired(), { limit = 100, tags = []} = {}) {
 
     const data = await fetch(PHOTOS, {
       method: 'POST',
