@@ -142,7 +142,6 @@ class SpypointClient {
    */
 
   async mostRecentPhotosByCamera(tags = []) {
-
     const cameras = await this.cameras()
 
     const photoReq = cameras.map(({ id }) =>
@@ -161,7 +160,7 @@ class SpypointClient {
    * @return {Object[]} - All photos filtered by the given tags and limit
    */
 
-  async queryAllPhotos({ limit = 100, tags = [] } = { limit, tags }) {
+  async queryAllPhotos({ limit = 100, tags = [] } = {}) {
     tags = await this._tagParamCheck(tags)
 
     const cameras = await this.cameras()
