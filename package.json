@@ -4,7 +4,7 @@
   "description": "Node.js wrapper for the Spypoint game camera API",
   "main": "spypoint.js",
   "scripts": {
-    "test": "jest test.js"
+    "test": "jest"
   },
   "keywords": [
     "spypoint",

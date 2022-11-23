@@ -5,7 +5,7 @@
 import 'dotenv/config'
 import SpypointClient from "./spypoint"
 
-async function testLogin() = {
+async function testLogin() {
   const Spypoint = new SpypointClient()
   const SpypointService = await Spypoint.login(process.env.EMAIL, process.env.PASSWORD)
   return SpypointService
