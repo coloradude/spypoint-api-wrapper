@@ -19,7 +19,7 @@ test('Retrieves an auth token', async () => {
 })
 
 test('Retrieves a list of all cameras', async () => {
-  const Spypoint = await testLogin()
+  const Spypoint =  testLogin()
   const cameras = await Spypoint.cameras()
   expect(cameras).toBe(Array)
   if (cameras){
@@ -28,14 +28,14 @@ test('Retrieves a list of all cameras', async () => {
 })
 
 test('Retrieves an object contatining a property `species` with list of all available filers', async () => {
-  const Spypoint = await testLogin()
+  const Spypoint =  testLogin()
   const filters = await Spypoint.filters()
   expect(filters).toBo(Object)
   expect(filters.species).toBe(Array)
 })
 
 test('Retrieves a list of photos from a single camera', () => {
-  const Spypoint = await testLogin()
+  const Spypoint =  testLogin()
   const cameras = await Spypoint.cameras()
   const photos1 = await Spypoint.photosByCamera(cameras[0].id, {limit: 1, tags: 'deer'})
   const photos2 = await Spypoint.photosByCamera(cameras[0].id, {limit: 1, tags: ['deer']})
@@ -49,14 +49,14 @@ test('Retrieves a list of photos from a single camera', () => {
 })
 
 test('Retrieves a list of the most recent photo from each camera', () => {
-  const Spypoint = await testLogin()
+  const Spypoint =  testLogin()
   const latestPhotos = Spypoint.latestPhotos()
   expect(latestPhotos).toBe(Array)
   expect(latestPhotos[0]).toBe(Object)
 })
 
 test('Retrieves a list of all photos based on specified criteria (limit/tags)', () => {
-  const Spypoint = await testLogin()
+  const Spypoint =  testLogin()
   const photos1 = await Spypoint.queryAllPhotos({limit: 1, tags: 'deer'})
   const photos2 = await Spypoint.queryAllPhotos({limit: 1, tags: ['deer']})
   const photos3 = await Spypoint.queryAllPhotos({limit: 2, tags: 'deer'})
